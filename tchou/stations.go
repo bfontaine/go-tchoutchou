@@ -2,7 +2,6 @@ package tchou
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/PuerkitoBio/goquery"
 )
@@ -28,14 +27,6 @@ type Station struct {
 // URL is the URL of the station
 func (s Station) URL() string {
 	return fmt.Sprintf("http://www.sncf.com/fr/%s", s.slug)
-}
-
-func softParseFloat(s string) float64 {
-	f, err := strconv.ParseFloat(s, 10)
-	if err != nil {
-		return float64(0)
-	}
-	return f
 }
 
 // Fetch fetches the station's page and populate its fields
