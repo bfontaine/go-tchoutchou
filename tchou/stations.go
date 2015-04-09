@@ -2,6 +2,7 @@ package tchou
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/bfontaine/go-tchoutchou/Godeps/_workspace/src/github.com/PuerkitoBio/goquery"
 )
@@ -10,16 +11,14 @@ const (
 	listStations = ".container-stations a.sncfcom-colors-internal-automatic"
 )
 
-// Fetchable represents a resource that can be fetched from a remote page
-type Fetchable interface {
-	Fetch() error
-}
-
 // A Station is a train station
 type Station struct {
 	Name, Address string
 
 	Lat, Long float64
+
+	// Ref is a short unique reference to a station
+	Ref string
 
 	slug string
 }
@@ -29,8 +28,8 @@ func (s Station) URL() string {
 	return fmt.Sprintf("http://www.sncf.com/fr/%s", s.slug)
 }
 
-// Fetch fetches the station's page and populate its fields
-func (s *Station) Fetch() error {
+// fetch fetches the station's page and populate its fields
+func (s *Station) fetch() error {
 	doc, err := goquery.NewDocument(s.URL())
 
 	if err != nil {
@@ -43,6 +42,12 @@ func (s *Station) Fetch() error {
 	s.Address = desc.Find("input[name=adresseGare]").Text()
 	s.Lat = softParseFloat(desc.Find("input[name=adresseLat]").Text())
 	s.Long = softParseFloat(desc.Find("input[name=adresseLong]").Text())
+
+	parts := strings.Split(s.slug, "-")
+	lparts := len(parts)
+	if lparts > 1 {
+		s.Ref = parts[lparts-1]
+	}
 
 	// note: we could also parse the next trains
 
@@ -60,20 +65,9 @@ func (sl *StationsList) Len() int {
 	return sl.length
 }
 
-// Fetch fetches and populates the stations list
-func (sl *StationsList) Fetch() error {
-	// note: the URL also support POST requests with text queries to filter the
-	// stations.
-	doc, err := goquery.NewDocument(listURL)
-
-	if err != nil {
-		return err
-	}
-
+func (sl *StationsList) populateFromDoc(doc *goquery.Document) {
 	sl.selection = doc.Find(listStations)
 	sl.length = sl.selection.Length()
-
-	return nil
 }
 
 // Next returns one station at a time. It is more effective when you need to
@@ -82,6 +76,11 @@ func (sl *StationsList) Next() Station {
 	s := sl.Get(sl.idx)
 	sl.idx++
 	return s
+}
+
+// More checks if there are more stations available with Next()
+func (sl *StationsList) More() bool {
+	return sl.idx < sl.length-1
 }
 
 // Get returns the station at the given index in the list
