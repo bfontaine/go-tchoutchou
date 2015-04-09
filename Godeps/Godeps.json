@@ -11,6 +11,15 @@
 			"Rev": "269246d9e7d42d74e1cf929336d128d2ef53e7a5"
 		},
 		{
+			"ImportPath": "github.com/alecthomas/kingpin",
+			"Comment": "v1.3.6-1-g6092fa4",
+			"Rev": "6092fa49a551e2911adbd5ed47b0f411887aa07f"
+		},
+		{
+			"ImportPath": "github.com/alecthomas/units",
+			"Rev": "6b4e7dc5e3143b85ea77909c72caf89416fc2915"
+		},
+		{
 			"ImportPath": "github.com/andybalholm/cascadia",
 			"Rev": "54abbbf07a45a3ef346ebe903e0715d9a3c19352"
 		},
