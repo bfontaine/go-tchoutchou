@@ -1,0 +1,22 @@
+{
+	"ImportPath": "github.com/bfontaine/go-tchoutchou",
+	"GoVersion": "go1.4.2",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/PuerkitoBio/goquery",
+			"Comment": "v0.3.2-72-g269246d",
+			"Rev": "269246d9e7d42d74e1cf929336d128d2ef53e7a5"
+		},
+		{
+			"ImportPath": "github.com/andybalholm/cascadia",
+			"Rev": "54abbbf07a45a3ef346ebe903e0715d9a3c19352"
+		},
+		{
+			"ImportPath": "golang.org/x/net/html",
+			"Rev": "6460565bec1e8891e29ff478184c71b9e443ac36"
+		}
+	]
+}

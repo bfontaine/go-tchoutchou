@@ -3,7 +3,7 @@ package tchou
 import (
 	"fmt"
 
-	"github.com/PuerkitoBio/goquery"
+	"github.com/bfontaine/go-tchoutchou/Godeps/_workspace/src/github.com/PuerkitoBio/goquery"
 )
 
 const (
