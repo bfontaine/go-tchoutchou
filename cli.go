@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -29,21 +28,22 @@ func main() {
 	switch parsed {
 	case stationCmd.FullCommand():
 		// TODO
+		log.Fatal(tchou.ErrNotImplemented)
 	case listCmd.FullCommand():
-		// TODO
-
-		// just a test for now
 		l, err := tchou.GlobalList()
 
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		for l.More() {
-			s := l.Next()
-			fmt.Printf("%s\n", s.Name)
+		out := os.Stdout
+
+		if *csvList {
+			l.WriteCSV(out)
+		} else if *jsonList {
+			l.WriteJSON(out)
+		} else {
+			l.Print(out)
 		}
 	}
-
-	// TODO
 }

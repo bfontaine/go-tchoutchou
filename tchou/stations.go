@@ -13,12 +13,14 @@ const (
 
 // A Station is a train station
 type Station struct {
-	Name, Address string
+	Name    string `json:"name"`
+	Address string `json:"address"`
 
-	Lat, Long float64
+	Lat  float64 `json:"lat"`
+	Long float64 `json:"long"`
 
 	// Ref is a short unique reference to a station
-	Ref string
+	Ref string `json:"ref"`
 
 	slug string
 }
@@ -43,15 +45,21 @@ func (s *Station) fetch() error {
 	s.Lat = softParseFloat(desc.Find("input[name=adresseLat]").Text())
 	s.Long = softParseFloat(desc.Find("input[name=adresseLong]").Text())
 
+	// note: we could also parse the next trains
+
+	return nil
+}
+
+func newStation(name, slug string) Station {
+	s := Station{slug: slug, Name: name}
+
 	parts := strings.Split(s.slug, "-")
 	lparts := len(parts)
 	if lparts > 1 {
 		s.Ref = parts[lparts-1]
 	}
 
-	// note: we could also parse the next trains
-
-	return nil
+	return s
 }
 
 // A StationsList is a list of stations
@@ -84,19 +92,31 @@ func (sl *StationsList) More() bool {
 }
 
 // Get returns the station at the given index in the list
-func (sl *StationsList) Get(idx int) (s Station) {
+func (sl *StationsList) Get(idx int) Station {
 	node := sl.selection.Get(idx)
+
+	var slug, name string
 
 	for _, attr := range node.Attr {
 		switch attr.Key {
 		case "href":
-			s.slug = attr.Val
+			slug = attr.Val
 		case "title":
-			s.Name = attr.Val
+			name = attr.Val
 		}
 	}
 
-	return s
+	return newStation(name, slug)
+}
+
+func (sl *StationsList) each(fn func(Station) error) (err error) {
+	for sl.More() {
+		if err = fn(sl.Next()); err != nil {
+			return
+		}
+	}
+
+	return
 }
 
 // GetStations return a slice with all stations at once
