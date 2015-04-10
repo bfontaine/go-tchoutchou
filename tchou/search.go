@@ -7,10 +7,6 @@ import (
 	"github.com/bfontaine/go-tchoutchou/Godeps/_workspace/src/github.com/PuerkitoBio/goquery"
 )
 
-var (
-	ErrNotImplemented = errors.New("Not implemented")
-)
-
 // TODO check http://www.sncf.com/theme/js/cityList.js
 
 // GlobalList returns the list of all stations
