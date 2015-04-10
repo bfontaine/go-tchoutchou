@@ -3,8 +3,8 @@ package tchou
 import (
 	"testing"
 
-	"github.com/franela/goblin"
-	o "github.com/onsi/gomega"
+	"github.com/bfontaine/go-tchoutchou/Godeps/_workspace/src/github.com/franela/goblin"
+	o "github.com/bfontaine/go-tchoutchou/Godeps/_workspace/src/github.com/onsi/gomega"
 )
 
 func TestExports(t *testing.T) {

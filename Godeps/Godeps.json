@@ -24,6 +24,16 @@
 			"Rev": "54abbbf07a45a3ef346ebe903e0715d9a3c19352"
 		},
 		{
+			"ImportPath": "github.com/franela/goblin",
+			"Comment": "0.0.1-53-g2042c4d",
+			"Rev": "2042c4d610d2da4e4d2afd754da0b4eef31753bb"
+		},
+		{
+			"ImportPath": "github.com/onsi/gomega",
+			"Comment": "v1.0-30-g982c859",
+			"Rev": "982c859aeeffd81ab8717403fb03c379b6c92b5f"
+		},
+		{
 			"ImportPath": "golang.org/x/net/html",
 			"Rev": "6460565bec1e8891e29ff478184c71b9e443ac36"
 		}
