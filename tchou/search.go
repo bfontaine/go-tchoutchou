@@ -2,6 +2,7 @@ package tchou
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/bfontaine/go-tchoutchou/Godeps/_workspace/src/github.com/PuerkitoBio/goquery"
 )
@@ -27,8 +28,12 @@ func GlobalList() (*StationsList, error) {
 	return &sl, nil
 }
 
-// FindStation tries to find a station by its name or its code.
-func FindStation(name string) (*Station, error) {
-	// TODO
-	return nil, ErrNotImplemented
+// FindStation returns a station given its ref
+func FindStationByRef(ref string) (*Station, error) {
+
+	s := Station{slug: fmt.Sprintf("gare-d-%s", ref), Ref: ref}
+
+	err := s.fetch()
+
+	return &s, err
 }

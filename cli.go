@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -15,6 +16,9 @@ var (
 	stationCmd = app.Command("station", "show infos about a station")
 	listCmd    = app.Command("list", "list all stations")
 
+	// args
+	stationRef = stationCmd.Arg("ref", "station ref").Required().String()
+
 	// flags
 	csvList  = listCmd.Flag("csv", "print the list as CSV").Bool()
 	jsonList = listCmd.Flag("json", "print the list as JSON").Bool()
@@ -27,8 +31,15 @@ func main() {
 
 	switch parsed {
 	case stationCmd.FullCommand():
-		// TODO
-		log.Fatal(tchou.ErrNotImplemented)
+		s, err := tchou.FindStationByRef(*stationRef)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Printf("%s (%s)\n\n%s\n(%f, %f)\n",
+			s.Name, s.Ref, s.Address, s.Lat, s.Long)
+
 	case listCmd.FullCommand():
 		l, err := tchou.GlobalList()
 

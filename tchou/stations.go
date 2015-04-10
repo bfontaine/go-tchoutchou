@@ -1,7 +1,9 @@
 package tchou
 
 import (
+	"errors"
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/bfontaine/go-tchoutchou/Godeps/_workspace/src/github.com/PuerkitoBio/goquery"
@@ -10,6 +12,12 @@ import (
 const (
 	listStations = ".container-stations a.sncfcom-colors-internal-automatic"
 )
+
+var (
+	ErrStationNotFound = errors.New("Station not found")
+)
+
+var httpClient = http.DefaultClient
 
 // A Station is a train station
 type Station struct {
@@ -30,9 +38,25 @@ func (s Station) URL() string {
 	return fmt.Sprintf("http://www.sncf.com/fr/%s", s.slug)
 }
 
+func (s Station) request() *http.Request {
+	r, _ := http.NewRequest("GET", s.URL(), nil)
+	r.AddCookie(&http.Cookie{Name: "has_js", Value: "1"})
+	return r
+}
+
 // fetch fetches the station's page and populate its fields
 func (s *Station) fetch() error {
-	doc, err := goquery.NewDocument(s.URL())
+	resp, err := httpClient.Do(s.request())
+
+	if err != nil {
+		return err
+	}
+
+	if resp.StatusCode == 404 {
+		return ErrStationNotFound
+	}
+
+	doc, err := goquery.NewDocumentFromResponse(resp)
 
 	if err != nil {
 		return err
@@ -41,9 +65,13 @@ func (s *Station) fetch() error {
 	desc := doc.Find("#description")
 
 	s.Name = desc.Find("label").Text()
-	s.Address = desc.Find("input[name=adresseGare]").Text()
-	s.Lat = softParseFloat(desc.Find("input[name=adresseLat]").Text())
-	s.Long = softParseFloat(desc.Find("input[name=adresseLong]").Text())
+	s.Address, _ = desc.Find("input[name=adresseGare]").Attr("value")
+
+	lat, _ := desc.Find("input[name=adresseLat]").Attr("value")
+	long, _ := desc.Find("input[name=adresseLong]").Attr("value")
+
+	s.Lat = softParseFloat(lat)
+	s.Long = softParseFloat(long)
 
 	// note: we could also parse the next trains
 
