@@ -1,7 +1,6 @@
 package tchou
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/bfontaine/go-tchoutchou/Godeps/_workspace/src/github.com/PuerkitoBio/goquery"
